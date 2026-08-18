@@ -9119,15 +9119,11 @@ int main(int argc, char** argv) {
 }
 
 // ============================================================
-//  编译示例 (容器内无 OpenCV C++ 开发库,未做编译验证,
-//            按你 line.cpp 的实际 build 环境调整路径):
+//  Build from the repository root with the supplied CMake configuration:
 //
-//  g++ -O2 -std=c++17 raicom_run.cpp -o raicom_run \
-//      -I/path/to/unitree_sdk2/include \
-//      -L/path/to/unitree_sdk2/lib -lunitree_sdk2 -lddsc -lddscxx \
-//      $(pkg-config --cflags --libs opencv4) -lpthread
+//    cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+//    cmake --build build -j
 //
-//  —— 最稳的做法:直接套用你编 line.cpp 的那套 CMakeLists / 命令,
-//     把源文件换成 raicom_run.cpp 即可 (line.cpp 本来就同时链
-//     OpenCV + unitree_sdk2,依赖完全一致)。
+//  Unitree SDK2 and OpenCV 4 must be installed separately. The repository's
+//  GitHub Actions workflow performs the same configure-and-build validation.
 // ============================================================
