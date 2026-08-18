@@ -20,10 +20,19 @@ Official Chinese competition name: **2026年睿抗机器人开发者大赛（RAI
 
 ## Open-source scope
 
-This repository releases the Go2-side competition controller in
+This repository releases a publication-oriented revision of the national-final
+Go2-side competition controller in
 [`src/raicom_multimodal_inspection.cpp`](src/raicom_multimodal_inspection.cpp).
 It includes the high-level logic that coordinates robot locomotion, perception,
 safety fallbacks, and the serial command interface used by the complete system.
+
+The public revision preserves the national-final mission and motion logic while
+removing manual preselection of the drawn task identifiers. Warning actions
+`1`/`2`/`3` and placement commands `5`/`6` are selected only from visual
+recognition results. If recognition is inconclusive, the corresponding action
+or command is skipped rather than replaced with a command-line default. The
+released file is therefore not claimed to be byte-identical to the
+competition-day executable.
 
 The following components are intentionally not included:
 
@@ -90,6 +99,16 @@ location to `CMAKE_PREFIX_PATH`.
 ```bash
 ./build/raicom_multimodal_inspection <network-interface> [options]
 ```
+
+For example:
+
+```bash
+./build/raicom_multimodal_inspection eth0 left lab 9 nogui
+```
+
+Do not pass `1`, `2`, `3`, `5`, or `6` at startup. Those values are runtime
+recognition outputs, not configuration options. Run the executable without
+arguments to print the remaining calibration and deployment options.
 
 The program is hardware-specific and is not expected to run meaningfully
 without the required robot and sensor streams. Review

@@ -13,10 +13,12 @@ without refactoring tested control paths before publication.
 
 ## Visual perception
 
-- `classifyWarningAction` — recognizes the warning-action command;
-- `classifyPlaceCommand` — recognizes the placement command;
-- `recognizeWarningFromCamera` and `recognizePlaceFromCamera` — aggregate
-  camera observations before the mission commits to a command;
+- `classifyWarningAction` — maps the warning sign in the trigger frame to
+  action `1`, `2`, or `3`;
+- `classifyPlaceCommand` — maps a placement-sign frame to command `5` or `6`;
+- `recognizeWarningFromCamera` and `recognizePlaceFromCamera` — provide
+  multi-frame recognition helpers; the mission uses the placement helper to
+  require a stable result before committing to `5` or `6`;
 - line and region segmentation helpers — provide adaptive thresholds and
   failure diagnostics for course following.
 
@@ -44,7 +46,9 @@ this repository.
 
 ## Entry point and field modes
 
-`main` parses the network interface, course choices, calibration modes, camera
-parameters, and serial-device overrides before initializing Unitree SDK2 and
-running the integrated mission. Hardware calibration modes must be used while
-the robot is stationary and under direct supervision.
+`main` parses the network interface, course choices, stair strategy, calibration
+modes, camera parameters, and serial-device overrides before initializing
+Unitree SDK2 and running the integrated mission. Actions `1`/`2`/`3` and
+commands `5`/`6` are not startup arguments; they are written only by the visual
+recognition path. Hardware calibration modes must be used while the robot is
+stationary and under direct supervision.
