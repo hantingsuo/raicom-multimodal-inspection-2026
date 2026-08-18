@@ -18,8 +18,13 @@ boundary without redistributing the manipulator implementation.
 
 - camera acquisition through OpenCV;
 - adaptive line and region segmentation;
-- visual command and platform recognition;
+- visual warning-sign recognition that selects action `1`, `2`, or `3`;
+- visual placement-sign recognition that selects command `5` or `6`;
 - range observations from the Go2 and the front distance sensor.
+
+The two task decisions are recognition-only in the public revision. They cannot
+be preselected on the command line. An inconclusive result leaves the runtime
+identifier at zero and suppresses the corresponding action or serial command.
 
 ### Locomotion and navigation
 
