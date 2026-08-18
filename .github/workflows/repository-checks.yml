@@ -1,0 +1,65 @@
+name: Repository checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  public-tree-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify required public files
+        shell: bash
+        run: |
+          test -f README.md
+          test -f LICENSE
+          test -f THIRD_PARTY_NOTICES.md
+          test -f CMakeLists.txt
+          test -f src/raicom_multimodal_inspection.cpp
+      - name: Reject common private artifacts
+        shell: bash
+        run: |
+          if find . -type f \( \
+            -name '*.env' -o \
+            -name '*.pem' -o \
+            -name '*.key' -o \
+            -name 'wifiConfig.json' -o \
+            -name 'devConfig.json' -o \
+            -name 'mat_cal*.txt' \
+          \) -not -path './.git/*' | grep -q .; then
+            echo 'Private hardware or credential artifact detected.'
+            exit 1
+          fi
+
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            cmake \
+            git \
+            libboost-all-dev \
+            libeigen3-dev \
+            libfmt-dev \
+            libopencv-dev \
+            libspdlog-dev \
+            libyaml-cpp-dev
+      - name: Install Unitree SDK2
+        run: |
+          git clone --depth 1 https://github.com/unitreerobotics/unitree_sdk2.git "$RUNNER_TEMP/unitree_sdk2"
+          cmake -S "$RUNNER_TEMP/unitree_sdk2" -B "$RUNNER_TEMP/unitree_sdk2-build" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX="$RUNNER_TEMP/unitree_sdk2-install"
+          cmake --build "$RUNNER_TEMP/unitree_sdk2-build" -j2
+          cmake --install "$RUNNER_TEMP/unitree_sdk2-build"
+      - name: Configure and build controller
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$RUNNER_TEMP/unitree_sdk2-install"
+          cmake --build build -j2

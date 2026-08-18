@@ -1,0 +1,34 @@
+build/
+cmake-build-*/
+.cache/
+.idea/
+.vscode/
+*.o
+*.so
+*.a
+*.log
+*.swp
+__pycache__/
+*.py[cod]
+.DS_Store
+
+# Local hardware configuration and calibration
+.env
+.env.*
+*.local
+mat_cal*.txt
+camera_cal*.yml
+camera_cal*.yaml
+wifiConfig.json
+devConfig.json
+
+# Vendor trees and firmware remain external
+unitree_sdk2/
+RoArm_M2*/
+third_party/
+firmware/
+
+# Captured media and local experiment output
+recordings/
+logs/
+captures/
